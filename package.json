@@ -1,0 +1,34 @@
+{
+  "name": "eurochem-test-task",
+  "version": "0.1.0",
+  "description": "Sample implementation for EuroChem ",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server",
+    "test": "./node_modules/.bin/mocha",
+    "dev": "./node_modules/.bin/nodemon server/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://georgiychikhladze@bitbucket.org/georgiychikhladze/eurochem-test-task.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "test"
+  ],
+  "author": "Georgy Chikhladze <georgiy.chikhladze@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/georgiychikhladze/eurochem-test-task#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.4.5",
+    "nodemon": "^1.9.0"
+  }
+}
