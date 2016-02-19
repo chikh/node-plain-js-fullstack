@@ -2,11 +2,11 @@
   "name": "eurochem-test-task",
   "version": "0.1.0",
   "description": "Sample implementation for EuroChem ",
-  "main": "server/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server/server",
+    "start": "node server",
     "test": "./node_modules/.bin/mocha",
-    "dev": "./node_modules/.bin/nodemon server/server.js"
+    "dev": "./node_modules/.bin/nodemon"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
-    "nodemon": "^1.9.0"
+    "nodemon": "^1.9.0",
+    "supertest": "^1.2.0"
   }
 }
