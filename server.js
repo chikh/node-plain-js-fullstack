@@ -1,27 +1,35 @@
 'use strict';
-
-const isDeveloping = process.env.NODE_ENV !== 'production';
-const port = isDeveloping ? 3333 : process.env.PORT;
-
 const path = require('path');
-const express = require('express');
-const app = express();
 
-const modelRouter = require(path.join(__dirname, 'routes', 'model'));
-
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
-app.use('/model', modelRouter);
-
-app.get('/', (req, res) => {
-  res.redirect('/model');
-});
-
-const run = cb => {
-  if (!cb) {
-    cb = () => {};
+const run = (callback, port) => modelProvider => {
+  if (!callback) {
+    callback = () => {};
   }
+
+  if (!port) {
+    port = 3333;
+  }
+
+  if (!modelProvider) {
+    throw 'modelProvider is required';
+  }
+
+  const isDeveloping = process.env.NODE_ENV !== 'production';
+  port = isDeveloping ? port : process.env.PORT;
+
+  const express = require('express');
+  const app = express();
+
+  const modelRouter = require(path.join(__dirname, 'routes', 'model'));
+
+  app.set('views', path.join(__dirname, 'views'));
+  app.set('view engine', 'jade');
+
+  app.use('/model', modelRouter(modelProvider));
+
+  app.get('/', (req, res) => {
+    res.redirect('/model');
+  });
 
   return app.listen(port, (err) => {
     if (err) {
@@ -29,12 +37,14 @@ const run = cb => {
     }
 
     console.info(`Server listening on http://0.0.0.0:${port}`);
-    cb(err);
+    callback(err);
   });
 };
 
 if (require.main === module) {
-  run();
+  const modelProvider =
+    require(path.join(__dirname, 'services', 'model-provider'));
+  run()(modelProvider());
 }
 
 module.exports = run;

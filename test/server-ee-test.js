@@ -5,12 +5,14 @@ const chai = require('chai');
 chai.should();
 const supertest = require('supertest');
 const serverRunner = require(path.join(__dirname, '..', 'server'));
+const modelProviderMock =
+  require(path.join(__dirname, 'fixtures', 'model-provider-simple-mock'));
 
 describe('Server', () => {
   let server;
 
   beforeEach((done) => {
-    server = serverRunner(done);
+    server = serverRunner(done, 3737)(modelProviderMock);
   });
 
   afterEach((done) => {
