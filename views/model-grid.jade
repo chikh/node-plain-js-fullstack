@@ -39,15 +39,24 @@ block content
                 input#inputFile(type="file")
                 p.help-block
                   | The file should be in a specific format, for instance:
-                  |	{
-                  |  tableName: 'notes',
-                  |  fields: {
-                  |    text: {
-                  |      type: 'string',
-                  |      label: 'Text of note'
+                  |{
+                  |  "tableName": "cars",
+                  |  "fields": {
+                  |    "model": {
+                  |      "type": "string",
+                  |      "label": "Model name"
+                  |    },
+                  |    "yearOfProduction": {
+                  |      "type": "integer",
+                  |      "label": "Year of production"
+                  |    },
+                  |    "buyDay": {
+                  |      "type": "date",
+                  |      "label": "Date of buy"
                   |    }
                   |  }
                   |}
+
               .btn-toolbar
                 button.btn.btn-default(data-dismiss="modal") Close
                 button.btn.btn-primary(type="submit") Upload
