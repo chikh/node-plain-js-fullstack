@@ -1,4 +1,5 @@
 'use strict';
+
 const path = require('path');
 const isNotModule = require.main === module;
 
@@ -12,7 +13,7 @@ const run = (callback, port) => modelProvider => {
   }
 
   if (!modelProvider) {
-    throw 'modelProvider is required';
+    throw new Error('modelProvider is required');
   }
 
   const isDeveloping = process.env.NODE_ENV !== 'production';
@@ -32,7 +33,7 @@ const run = (callback, port) => modelProvider => {
     res.redirect('/model');
   });
 
-  return app.listen(port, (err) => {
+  return app.listen(port, err => {
     if (err) {
       console.log(err);
     }

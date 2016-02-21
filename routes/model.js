@@ -1,8 +1,9 @@
 'use strict';
 
+/* eslint new-cap: 1*/
+
 module.exports = modelProvider => {
   const _ = require('lodash');
-  const path = require('path');
   const express = require('express');
   const router = express.Router();
   const multer = require('multer');
@@ -11,17 +12,17 @@ module.exports = modelProvider => {
     storage: storage
   });
 
-  const modelToGridRow = (model) => {
+  const fieldDescriptionsToFieldLabels = fieldDescriptions =>
+    _.values(fieldDescriptions)
+    .map(description => description.label)
+    .join(', ');
+
+  const modelToGridRow = model => {
     return {
       name: _.capitalize(model.tableName),
       fields: fieldDescriptionsToFieldLabels(model.fields)
     };
   };
-
-  const fieldDescriptionsToFieldLabels = (fieldDescriptions) =>
-    _.values(fieldDescriptions)
-    .map(description => description.label)
-    .join(', ');
 
   router.get('/', (req, res) => {
     res.render('model-grid', {

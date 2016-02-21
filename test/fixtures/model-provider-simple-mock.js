@@ -18,18 +18,17 @@ module.exports = () => {
           ripeningDate: {
             type: 'date',
             label: 'Date of ripening'
-          },
-        },
+          }
+        }
       }, {
         tableName: 'notes',
         fields: {
           text: {
             type: 'string',
             label: 'Text of note'
-          },
+          }
         }
       }];
-
     },
     addModel: sinon.spy()
   };
