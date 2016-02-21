@@ -47,8 +47,7 @@ const run = (callback, port) => modelProvider => {
 
 if (isNotModule) {
   const modelProvider =
-    require(path.join(__dirname, 'test', 'fixtures', 'model-provider-simple-mock'));
-    // require(path.join(__dirname, 'services', 'model-provider')); TODO
+    require(path.join(__dirname, 'services', 'model-provider'));
   run()(modelProvider());
 }
 

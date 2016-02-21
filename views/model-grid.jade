@@ -36,7 +36,7 @@ block content
             form(action="/model", method="post", enctype="multipart/form-data")
               .form-group
                 label(for="inputFile") JSON text file
-                input#inputFile(type="file")
+                input#inputFile(type="file", name="modelFile")
                 p.help-block
                   | The file should be in a specific format, for instance:
                   |{

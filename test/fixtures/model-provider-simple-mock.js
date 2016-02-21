@@ -1,4 +1,5 @@
 'use strict';
+const sinon = require('sinon');
 
 module.exports = () => {
   return {
@@ -29,6 +30,7 @@ module.exports = () => {
         }
       }];
 
-    }
+    },
+    addModel: sinon.spy()
   };
 };
