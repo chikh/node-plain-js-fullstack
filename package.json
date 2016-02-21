@@ -1,7 +1,7 @@
 {
   "name": "eurochem-test-task",
   "version": "0.1.0",
-  "description": "Sample implementation for EuroChem ",
+  "description": "Sample implementation for EuroChem",
   "main": "server.js",
   "scripts": {
     "start": "node server",
@@ -15,7 +15,8 @@
   "keywords": [
     "node",
     "express",
-    "test"
+    "jade",
+    "boilerplate"
   ],
   "author": "Georgy Chikhladze <georgiy.chikhladze@gmail.com>",
   "license": "MIT",

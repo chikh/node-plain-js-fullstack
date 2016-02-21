@@ -30,6 +30,7 @@ module.exports = () => {
         }
       }];
     },
-    addModel: sinon.spy()
+    addModel: sinon.spy(),
+    modelExists: model => model.tableName === 'notes'
   };
 };

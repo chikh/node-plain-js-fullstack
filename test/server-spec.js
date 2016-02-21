@@ -41,10 +41,14 @@ describe('Server', () => {
         .end(done);
     });
 
-    it('should try to add a new model description by POST /model', done => {
-      supertest(server)
+    const sendModelFile = fileName => {
+      return supertest(server)
         .post('/model')
-        .attach('modelFile', path.join(__dirname, 'fixtures', 'car-model.txt'))
+        .attach('modelFile', path.join(__dirname, 'fixtures', fileName));
+    };
+
+    it('should try to add a new model description by POST /model', done => {
+      sendModelFile('car-model.txt')
         .expect(302).end(err => {
           if (err) {
             done(err);
@@ -71,6 +75,8 @@ describe('Server', () => {
       done();
     });
 
-    it.skip('should respond with 409 if model already exists');
+    it('should respond with 409 if model already exists', done => {
+      sendModelFile('notes-model.txt').expect(409).end(done);
+    });
   });
 });

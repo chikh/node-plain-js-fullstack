@@ -31,8 +31,13 @@ module.exports = modelProvider => {
   });
 
   router.post('/', upload.single('modelFile'), (req, res) => {
-    modelProvider.addModel(JSON.parse(req.file.buffer.toString()));
-    res.redirect('/');
+    const parsedModel = JSON.parse(req.file.buffer.toString());
+    if (modelProvider.modelExists(parsedModel)) {
+      res.sendStatus(409);
+    } else {
+      modelProvider.addModel(parsedModel);
+      res.redirect('/');
+    }
   });
 
   return router;
