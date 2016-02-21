@@ -1,5 +1,6 @@
 'use strict';
 const path = require('path');
+const isNotModule = require.main === module;
 
 const run = (callback, port) => modelProvider => {
   if (!callback) {
@@ -36,12 +37,15 @@ const run = (callback, port) => modelProvider => {
       console.log(err);
     }
 
-    console.info(`Server listening on http://0.0.0.0:${port}`);
+    if (isNotModule) {
+      console.info(`Server listening on http://0.0.0.0:${port}`);
+    }
+
     callback(err);
   });
 };
 
-if (require.main === module) {
+if (isNotModule) {
   const modelProvider =
     require(path.join(__dirname, 'test', 'fixtures', 'model-provider-simple-mock'));
     // require(path.join(__dirname, 'services', 'model-provider')); TODO
