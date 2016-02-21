@@ -4,18 +4,50 @@ block title
   title Meta-model setup
 
 block content
-  h1 Data models
-  - if (models && models.length > 0) {
-    table.table.table-hover.table-bordered
-      thead
-        tr
-          th Name
-          th Field list
-      tbody
-        each model in models
+  .container
+    h1 Data models
+  .container(style="padding-bottom: 10px")
+    button.btn.btn-primary(type="button", data-toggle="modal", data-target="#uploadModel") Add model
+  .container
+    - if (models && models.length > 0) {
+      table.table.table-hover.table-bordered
+        thead
           tr
-            td= model.name
-            td= model.fields
-  - } else {
-    p No models available
-  - }
+            th Name
+            th Field list
+        tbody
+          each model in models
+            tr
+              td= model.name
+              td= model.fields
+    - } else {
+      p No models available
+    - }
+
+    .modal.fade#uploadModel(tabindex="-1", role="dialog", aria-labelledby="uploadModelLabel")
+      .modal-dialog(role="document")
+        .modal-content
+          .modal-header
+            button(type="button", class="close", data-dismiss="modal", aria-label="Close")
+              span(aria-hidden="true")
+                &times;
+            h4.modal-title#uploadModelLabel Upload new model description
+          .modal-body
+            form(action="/model", method="post", enctype="multipart/form-data")
+              .form-group
+                label(for="inputFile") JSON text file
+                input#inputFile(type="file")
+                p.help-block
+                  | The file should be in a specific format, for instance:
+                  |	{
+                  |  tableName: 'notes',
+                  |  fields: {
+                  |    text: {
+                  |      type: 'string',
+                  |      label: 'Text of note'
+                  |    }
+                  |  }
+                  |}
+              .btn-toolbar
+                button.btn.btn-default(data-dismiss="modal") Close
+                button.btn.btn-primary(type="submit") Upload
