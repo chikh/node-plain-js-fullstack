@@ -33,7 +33,11 @@ module.exports = modelProvider => {
   router.post('/', upload.single('modelFile'), (req, res) => {
     const parsedModel = JSON.parse(req.file.buffer.toString());
     if (modelProvider.modelExists(parsedModel)) {
-      res.sendStatus(409);
+      res.status(409)
+        .send(
+          `Model "${parsedModel.tableName}" already exists. ` +
+          `Pls, try another one.`
+        );
     } else {
       modelProvider.addModel(parsedModel);
       res.redirect('/');

@@ -49,7 +49,11 @@ const run = (callback, port) => modelProvider => {
 if (isNotModule) {
   const modelProvider =
     require(path.join(__dirname, 'services', 'model-provider'));
-  run()(modelProvider());
+  run()(
+    modelProvider(
+      require(path.join(__dirname, 'test', 'fixtures', 'data-source-stub'))()
+    ) // TODO: replace with real implementation
+  );
 }
 
 module.exports = run;

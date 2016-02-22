@@ -1,0 +1,17 @@
+{
+  "tableName": "cars",
+  "fields": {
+    "model": {
+      "type": "string",
+      "label": "Model name"
+    },
+    "yearOfProduction": {
+      "type": "integer",
+      "label": "Year of production"
+    },
+    "buyDay": {
+      "type": "date",
+      "label": "Date of buy"
+    }
+  }
+}

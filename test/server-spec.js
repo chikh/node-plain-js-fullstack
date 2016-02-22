@@ -8,9 +8,9 @@ chai.should();
 chai.use(require('sinon-chai'));
 const supertest = require('supertest');
 const serverRunner = require(path.join(__dirname, '..', 'server'));
-let modelProviderMock;
 
 describe('Server', () => {
+  let modelProviderMock;
   let server;
 
   beforeEach(done => {
