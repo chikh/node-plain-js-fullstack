@@ -54,23 +54,10 @@ describe('Server', () => {
             done(err);
           }
           modelProviderMock.addModel.should.have.been.calledOnce;
-          modelProviderMock.addModel.should.have.been.calledWith({
-            tableName: 'cars',
-            fields: {
-              model: {
-                type: 'string',
-                label: 'Model name'
-              },
-              yearOfProduction: {
-                type: 'integer',
-                label: 'Year of production'
-              },
-              buyDay: {
-                type: 'date',
-                label: 'Date of buy'
-              }
-            }
-          });
+          modelProviderMock.addModel.should.have.been
+            .calledWith(
+              require(path.join(__dirname, 'fixtures', 'car-model.json'))
+            );
         });
       done();
     });

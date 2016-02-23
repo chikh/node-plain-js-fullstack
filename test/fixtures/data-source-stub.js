@@ -1,15 +1,9 @@
 'use strict';
 
-const sinon = require('sinon');
+const stubber = require(require('path').join(__dirname, 'service-stubber'));
 
-const stub = () => {
-  let stub = sinon.stub({
-    createTable: () => {}
+module.exports = () => {
+  return stubber({
+    createTable: () => Promise.resolve('some table creation result')
   });
-
-  stub.createTable.returns(new Promise(resolve => resolve()));
-
-  return stub;
-}
-
-module.exports = stub;
+};

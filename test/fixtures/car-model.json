@@ -10,7 +10,7 @@
       "label": "Year of production"
     },
     "buyDay": {
-      "type": "date",
+      "type": "datetime",
       "label": "Date of buy"
     }
   }

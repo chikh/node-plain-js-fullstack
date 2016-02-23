@@ -41,8 +41,9 @@ describe('Model provider', () => {
           }
         };
       };
-      modelProvider.addModel(constructModel());
-      modelProvider.modelExists(constructModel()).should.be.true;
+      modelProvider.addModel(constructModel()).then(() =>
+        modelProvider.modelExists(constructModel()).should.be.true
+      );
     });
   });
 

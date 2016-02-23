@@ -1,8 +1,8 @@
 'use strict';
-const sinon = require('sinon');
+const stubber = require(require('path').join(__dirname, 'service-stubber'));
 
 module.exports = () => {
-  return {
+  const service = {
     allModels: () => {
       return [{
         tableName: 'apples',
@@ -16,7 +16,7 @@ module.exports = () => {
             label: 'Color name'
           },
           ripeningDate: {
-            type: 'date',
+            type: 'datetime',
             label: 'Date of ripening'
           }
         }
@@ -30,7 +30,8 @@ module.exports = () => {
         }
       }];
     },
-    addModel: sinon.spy(),
+    addModel: () => Promise.resolve('model added with some result'),
     modelExists: model => model.tableName === 'notes'
   };
+  return stubber(service);
 };

@@ -39,8 +39,10 @@ module.exports = modelProvider => {
           `Pls, try another one.`
         );
     } else {
-      modelProvider.addModel(parsedModel);
-      res.redirect('/');
+      modelProvider
+      .addModel(parsedModel)
+      .then(() => res.redirect('/'))
+      .catch(e => res.status(500).json(e));
     }
   });
 
