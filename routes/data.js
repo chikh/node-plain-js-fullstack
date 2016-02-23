@@ -10,14 +10,22 @@ module.exports = (modelProvider, dataSource) => {
 
   const existingModel = (req, res, next) => {
     const modelName = req.params.modelName;
-    if (!modelProvider
-      .modelExists({
+    if (
+      modelProvider.modelExists({
         tableName: modelName
-      })) {
-      next('route');
-    } else {
+      })
+    ) {
       next();
+    } else {
+      next('route');
     }
+  };
+
+  const fieldDescriptionToColumn = (fieldDescription, fieldName) => {
+    return {
+      id: fieldName,
+      label: fieldDescription.label
+    };
   };
 
   router.get('/:modelName', existingModel, (req, res) => {
@@ -28,13 +36,7 @@ module.exports = (modelProvider, dataSource) => {
         columns: _.map(modelProvider
           .allModels()
           .find(model => model.tableName === modelName)
-          .fields, (fieldDescription, fieldName) => {
-            return {
-              id: fieldName,
-              label: fieldDescription.label
-            };
-          }
-        ),
+          .fields, fieldDescriptionToColumn),
         rows: dataRows
       });
     });

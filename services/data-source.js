@@ -8,8 +8,11 @@ const knex = require('knex')({
   }
 });
 
+const bookshelf = require('bookshelf')(knex);
+
 module.exports = () => {
   const _ = require('lodash');
+  const aguid = require('aguid');
 
   const buildColumnByFieldDescription =
     table => (fieldDescription, fieldName) => {
@@ -29,6 +32,10 @@ module.exports = () => {
       }
     };
 
+  const bookshelfModelFor = modelName => bookshelf.Model.extend({
+    tableName: modelName
+  });
+
   return {
     createTable: model => {
       return knex.schema.hasTable(model.tableName).then(exists => {
@@ -42,20 +49,14 @@ module.exports = () => {
       });
     },
     dataForModel: modelName => {
-      return Promise.resolve([{
-        id: '1',
-        model: 'tesla',
-        buyDay: new Date(),
-        yearOfProduction: 2016
-      }, {
-        id: '2',
-        model: 'volvo',
-        buyDay: new Date(),
-        yearOfProduction: 2015
-      }]);
+      return bookshelfModelFor(modelName)
+        .fetchAll()
+        .then(collection => collection.serialize());
     },
     addRow: modelName => {
-      return Promise.resolve(modelName);
+      return bookshelfModelFor(modelName).forge().save({
+        id: aguid()
+      });
     }
   };
 };

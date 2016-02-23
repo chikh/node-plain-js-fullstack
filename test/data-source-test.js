@@ -62,4 +62,30 @@ describe('Datasource', () => {
       }).catch(e => done(e));
     }).catch(e => done(e));
   });
+
+  it('should fetch data from table', done => {
+    createTestTable().then(() => {
+      return knex(testTableName).insert({
+        id: require('aguid')(),
+        testField: 'testValue'
+      }).then(() => {
+        return dataSource.dataForModel(testTableName).then(data => {
+          data.length.should.be.equal(1);
+          data[0].testField.should.be.equal('testValue');
+          done();
+        });
+      });
+    }).catch(e => done(e));
+  });
+
+  it('should create an empty row', done => {
+    createTestTable().then(() => {
+      return dataSource.addRow(testTableName).then(() => {
+        return knex.select().table(testTableName).then(rows => {
+          rows.length.should.be.equal(1);
+          done();
+        });
+      }).catch(e => done(e));
+    });
+  });
 });
