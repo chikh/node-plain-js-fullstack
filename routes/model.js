@@ -19,7 +19,7 @@ module.exports = modelProvider => {
 
   const modelToGridRow = model => {
     return {
-      name: _.capitalize(model.tableName),
+      name: model.tableName,
       fields: fieldDescriptionsToFieldLabels(model.fields)
     };
   };
@@ -40,9 +40,9 @@ module.exports = modelProvider => {
         );
     } else {
       modelProvider
-      .addModel(parsedModel)
-      .then(() => res.redirect('/'))
-      .catch(e => res.status(500).json(e));
+        .addModel(parsedModel)
+        .then(() => res.redirect('/'))
+        .catch(e => res.status(500).json(e));
     }
   });
 

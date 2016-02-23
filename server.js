@@ -3,7 +3,7 @@
 const path = require('path');
 const isNotModule = require.main === module;
 
-const run = (callback, port) => modelProvider => {
+const run = (callback, port) => (modelProvider, dataSource) => {
   if (!callback) {
     callback = () => {};
   }
@@ -23,11 +23,13 @@ const run = (callback, port) => modelProvider => {
   const app = express();
 
   const modelRouter = require(path.join(__dirname, 'routes', 'model'));
+  const dataRouter = require(path.join(__dirname, 'routes', 'data'));
 
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'jade');
 
   app.use('/model', modelRouter(modelProvider));
+  app.use('/model', dataRouter(modelProvider, dataSource));
 
   app.get('/', (req, res) => {
     res.redirect('/model');
@@ -51,7 +53,7 @@ if (isNotModule) {
     require(path.join(__dirname, 'services', 'model-provider'));
   const dataSource =
     require(path.join(__dirname, 'services', 'data-source'))();
-  run()(modelProvider(dataSource));
+  run()(modelProvider(dataSource), dataSource);
 }
 
 module.exports = run;

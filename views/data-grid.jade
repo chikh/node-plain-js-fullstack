@@ -1,0 +1,27 @@
+extends ./layout
+
+block title
+  title Data of #{modelName}
+
+block content
+ .container
+   h1 #{modelName}
+ .container(style="padding-bottom: 10px")
+   button.btn.btn-primary(type="button", onclick="addRow()") Add empty row
+ .container
+   table.table.table-bordered
+     thead
+       each column in columns
+         th= column.label
+     tbody
+       each row in rows
+         tr
+           each column in columns
+             td= row[column.id]
+
+ script.
+   function addRow() {
+     $.ajax({url: '/model/#{modelName}', method: 'post'}).done(function() {
+       document.location.reload();
+     });
+   }

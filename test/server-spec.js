@@ -16,7 +16,9 @@ describe('Server', () => {
   beforeEach(done => {
     modelProviderMock =
       require(path.join(__dirname, 'fixtures', 'model-provider-simple-mock'))();
-    server = serverRunner(done, 3737)(modelProviderMock);
+    const dataSourceStub =
+      require(path.join(__dirname, 'fixtures', 'data-source-stub'))();
+    server = serverRunner(done, 3737)(modelProviderMock, dataSourceStub);
   });
 
   afterEach(done => {

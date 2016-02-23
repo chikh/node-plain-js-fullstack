@@ -40,6 +40,22 @@ module.exports = () => {
             });
         }
       });
+    },
+    dataForModel: modelName => {
+      return Promise.resolve([{
+        id: '1',
+        model: 'tesla',
+        buyDay: new Date(),
+        yearOfProduction: 2016
+      }, {
+        id: '2',
+        model: 'volvo',
+        buyDay: new Date(),
+        yearOfProduction: 2015
+      }]);
+    },
+    addRow: modelName => {
+      return Promise.resolve(modelName);
     }
   };
 };

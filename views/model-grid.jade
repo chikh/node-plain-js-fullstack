@@ -17,7 +17,7 @@ block content
             th Fields list
         tbody
           each model in models
-            tr
+            tr(onclick='window.location="/model/#{model.name}";', style="cursor: pointer")
               td= model.name
               td= model.fields
     - } else {
