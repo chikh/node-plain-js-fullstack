@@ -48,7 +48,7 @@ describe('Server', () => {
     };
 
     it('should try to add a new model description by POST /model', done => {
-      sendModelFile('car-model.txt')
+      sendModelFile('car-model.json')
         .expect(302).end(err => {
           if (err) {
             done(err);
