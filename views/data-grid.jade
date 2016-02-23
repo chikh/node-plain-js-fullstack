@@ -6,22 +6,20 @@ block title
 block content
  .container
    h1 #{modelName}
- .container(style="padding-bottom: 10px")
-   button.btn.btn-primary(type="button", onclick="addRow()") Add empty row
+ .container.toolbar.btn-toolbar
+   button.btn.btn-primary(type="button", onclick="addRow('#{modelName}')") Add empty row
+   button#save-button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}')") Save
  .container
    table.table.table-bordered
      thead
        each column in columns
-         th= column.label
-     tbody
+         th.clickable(onclick="editColumn('#{column.id}')")= column.label
+     tbody#rows
        each row in rows
-         tr
+         tr(id='#{row.id}')
            each column in columns
-             td= row[column.id]
-
- script.
-   function addRow() {
-     $.ajax({url: '/model/#{modelName}', method: 'post'}).done(function() {
-       document.location.reload();
-     });
-   }
+             td(class='#{column.id}')
+               div= row[column.id]
+ 
+block imports
+  script(src="/javascript/data-controller.js")

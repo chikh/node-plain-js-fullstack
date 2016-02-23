@@ -6,7 +6,7 @@ block title
 block content
   .container
     h1 Data models
-  .container(style="padding-bottom: 10px")
+  .container.btn-toolbar.toolbar
     button.btn.btn-primary(type="button", data-toggle="modal", data-target="#uploadModel") Add model
   .container
     - if (models && models.length > 0) {
@@ -17,7 +17,7 @@ block content
             th Fields list
         tbody
           each model in models
-            tr(onclick='window.location="/model/#{model.name}";', style="cursor: pointer")
+            tr.clickable(onclick='window.location="/model/#{model.name}";')
               td= model.name
               td= model.fields
     - } else {

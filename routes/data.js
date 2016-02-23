@@ -50,5 +50,9 @@ module.exports = (modelProvider, dataSource) => {
       .catch(e => res.status(500).json(e));
   });
 
+  router.put('/:modelName', (req, res) => {
+    res.send(req.body); // TODO
+  });
+
   return router;
 };
