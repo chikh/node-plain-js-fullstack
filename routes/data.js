@@ -47,11 +47,16 @@ module.exports = (modelProvider, dataSource) => {
     dataSource
       .addRow(modelName)
       .then(() => res.sendStatus(200))
-      .catch(e => res.status(500).json(e));
+      .catch(err => res.status(500).json(err));
   });
 
   router.put('/:modelName', (req, res) => {
-    res.send(req.body); // TODO
+    dataSource.saveData({
+      modelName: req.params.modelName,
+      data: req.body
+    })
+      .then(result => res.status(200).json(result))
+      .catch(err => res.status(500).json(err));
   });
 
   return router;
