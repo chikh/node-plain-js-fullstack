@@ -56,7 +56,10 @@ module.exports = (modelProvider, dataSource) => {
       data: req.body
     })
       .then(result => res.status(200).json(result))
-      .catch(err => res.status(500).json(err));
+      .catch(err => {
+        console.error(err);
+        res.status(500).json(err);
+      });
   });
 
   return router;

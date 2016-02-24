@@ -57,6 +57,39 @@ module.exports = () => {
       return bookshelfModelFor(modelName).forge().save({
         id: aguid()
       });
+    },
+
+    saveData: modelNameAndData => {
+      const modelName = modelNameAndData.modelName;
+      const data = modelNameAndData.data;
+      const entities =
+        _.map(
+          _.groupBy(data, cell => cell.rowId),
+          (fieldValues, entityId) => _
+          .merge(
+            {
+              id: entityId
+            },
+            _.mapValues(
+              _.groupBy(fieldValues,
+                fv => fv.columnId
+              ),
+              values => {
+                const value = values[0].value;
+                if (value !== '') {
+                  return value;
+                }
+              }
+            )
+          )
+        );
+      const models = bookshelf.Collection.extend({
+        model: bookshelf.Model.extend({
+          tableName: modelName
+        })
+      });
+      const entityModels = models.forge(entities);
+      return Promise.all(entityModels.invoke('save'));
     }
   };
 };
