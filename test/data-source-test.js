@@ -13,6 +13,7 @@ const knex = require('knex')({
   }
 });
 const guid = require('aguid');
+const _ = require('lodash');
 
 const testTableName = 'tableFromTest';
 
@@ -119,6 +120,11 @@ describe('Datasource', () => {
       };
     });
 
+    const clearedValuesState = state =>
+      state.map(cell => _.merge(_.cloneDeep(cell), {
+        value: null
+      }));
+
     const testOnPrecreatedEmptyRows = (dataToSave, expectedData, done) => {
       knex(modelName)
         .insert(emptyEntitesBy(expectedData))
@@ -158,11 +164,6 @@ describe('Datasource', () => {
         rowId: rowId2,
         columnId: 'size'
       }];
-      const data = dataToSave(
-        modelName,
-        emptyEntitesBy(nextState),
-        nextState
-      );
       const expectedData = [{
         id: rowId1,
         color: 'red',
@@ -172,6 +173,9 @@ describe('Datasource', () => {
         color: 'green',
         size: null
       }];
+      const data = dataToSave(
+        modelName, clearedValuesState(nextState), nextState
+      );
 
       testOnPrecreatedEmptyRows(data, expectedData, done);
     });
@@ -187,18 +191,16 @@ describe('Datasource', () => {
         value: '',
         columnId: 'size'
       }];
-      const dataToSave = {
-        modelName: modelName,
-        nextState: nextState,
-        previousState: emptyEntitesBy(nextState)
-      };
       const expectedData = [{
         id: rowId2,
         color: 'green',
         size: null
       }];
+      const data = dataToSave(
+        modelName, clearedValuesState(nextState), nextState
+      );
 
-      testOnPrecreatedEmptyRows(dataToSave, expectedData, done);
+      testOnPrecreatedEmptyRows(data, expectedData, done);
     });
 
     it('shouldn\'t save data if previous state ' +

@@ -57,12 +57,12 @@ module.exports = () => {
       )
     );
 
-  const entitiesToModelsCollection = (modelName, entities) =>
-    bookshelf.Collection.extend({
-      model: bookshelf.Model.extend({
-        tableName: modelName
-      })
-    }).add(entities);
+  const entitiesToModelsCollection = (modelName, entities) => {
+    const EntityModel = bookshelf.Collection.extend({
+      model: bookshelfModelFor(modelName)
+    });
+    return new EntityModel().add(entities);
+  };
 
   return {
 
@@ -94,15 +94,28 @@ module.exports = () => {
       const modelName = modelNameAndData.modelName;
       const nextState = modelNameAndData.nextState;
       const nextStateEntities = stateToEntities(nextState);
-      const previousStateEntities = stateToEntities(modelNameAndData.previousState);
+      const previousStateEntities =
+        stateToEntities(modelNameAndData.previousState);
 
-      const nextStateModels = entitiesToModelsCollection(modelName, nextStateEntities);
-      const previousStateModels = entitiesToModelsCollection(modelName, previousStateEntities);
-      const currentStateModels = bookshelfModelFor(modelName).fetchAll();
+      const nextStateModels =
+        entitiesToModelsCollection(modelName, nextStateEntities);
 
-      return currentStateModels.then(currentState => {
-        //TODO
-      }).then(() => Promise.all(nextStateModels.invoke('save')));
+      return bookshelfModelFor(modelName).fetchAll()
+        .then(currentState => {
+          const currentStateEntities = currentState.serialize();
+          return _.isEmpty(
+            _.differenceWith(
+              currentStateEntities, previousStateEntities, _.isEqual
+            )
+          );
+        })
+        .then(isEligible => {
+          if (isEligible) {
+            return nextStateModels.invokeThen('save');
+          } else {
+            return Promise.resolve('TODO: cant save');
+          }
+        });
     }
   };
 };
