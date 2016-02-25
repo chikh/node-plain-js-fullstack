@@ -40,8 +40,7 @@ module.exports = () => {
     _.map(
       _.groupBy(state, cell => cell.rowId),
       (fieldValues, entityId) => _
-      .merge(
-        {
+      .merge({
           id: entityId
         },
         _.mapValues(
@@ -57,6 +56,13 @@ module.exports = () => {
         )
       )
     );
+
+  const entitiesToModelsCollection = (modelName, entities) =>
+    bookshelf.Collection.extend({
+      model: bookshelf.Model.extend({
+        tableName: modelName
+      })
+    }).add(entities);
 
   return {
 
@@ -88,13 +94,15 @@ module.exports = () => {
       const modelName = modelNameAndData.modelName;
       const nextState = modelNameAndData.nextState;
       const nextStateEntities = stateToEntities(nextState);
+      const previousStateEntities = stateToEntities(modelNameAndData.previousState);
 
-      const entityModels = bookshelf.Collection.extend({
-        model: bookshelf.Model.extend({
-          tableName: modelName
-        })
-      }).forge(nextStateEntities);
-      return Promise.all(entityModels.invoke('save'));
+      const nextStateModels = entitiesToModelsCollection(modelName, nextStateEntities);
+      const previousStateModels = entitiesToModelsCollection(modelName, previousStateEntities);
+      const currentStateModels = bookshelfModelFor(modelName).fetchAll();
+
+      return currentStateModels.then(currentState => {
+        //TODO
+      }).then(() => Promise.all(nextStateModels.invoke('save')));
     }
   };
 };

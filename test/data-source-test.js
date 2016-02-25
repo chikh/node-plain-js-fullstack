@@ -93,7 +93,7 @@ describe('Datasource', () => {
       .catch(e => done(e));
   });
 
-  describe('Save data method', () => {
+  describe('save data method', () => {
     const modelName = 'apples';
 
     beforeEach(done => {
@@ -131,6 +131,14 @@ describe('Datasource', () => {
         .catch(e => done(e));
     };
 
+    const dataToSave = (modelName, previousState, nextState) => {
+      return {
+        modelName: modelName,
+        previousState: previousState,
+        nextState: nextState
+      };
+    };
+
     it('should save data into empty rows', done => {
       const rowId1 = guid();
       const rowId2 = guid();
@@ -150,11 +158,11 @@ describe('Datasource', () => {
         rowId: rowId2,
         columnId: 'size'
       }];
-      const dataToSave = {
-        modelName: modelName,
-        previousState: emptyEntitesBy(nextState),
-        nextState: nextState
-      };
+      const data = dataToSave(
+        modelName,
+        emptyEntitesBy(nextState),
+        nextState
+      );
       const expectedData = [{
         id: rowId1,
         color: 'red',
@@ -165,7 +173,7 @@ describe('Datasource', () => {
         size: null
       }];
 
-      testOnPrecreatedEmptyRows(dataToSave, expectedData, done);
+      testOnPrecreatedEmptyRows(data, expectedData, done);
     });
 
     it('should properly handle empty values', done => {
@@ -192,5 +200,29 @@ describe('Datasource', () => {
 
       testOnPrecreatedEmptyRows(dataToSave, expectedData, done);
     });
+
+    it('shouldn\'t save data if previous state ' +
+      'isn\'t equal to the current state of DB',
+      done => {
+        const rowId = guid();
+        const nextState = [{
+          rowId: rowId,
+          columnId: 'color',
+          value: 'red'
+        }];
+        const previousState = [{
+          rowId: rowId,
+          columnId: 'color',
+          value: 'green'
+        }];
+        const expectedData = [{
+          id: rowId,
+          color: null,
+          size: null
+        }];
+        const data = dataToSave(modelName, previousState, nextState);
+
+        testOnPrecreatedEmptyRows(data, expectedData, done);
+      });
   });
 });
