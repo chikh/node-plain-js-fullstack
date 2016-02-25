@@ -51,10 +51,9 @@ module.exports = (modelProvider, dataSource) => {
   });
 
   router.put('/:modelName', (req, res) => {
-    dataSource.saveData({
-      modelName: req.params.modelName,
-      data: req.body
-    })
+    dataSource.saveData(_.merge({
+      modelName: req.params.modelName
+    }, req.body))
       .then(result => res.status(200).json(result))
       .catch(err => {
         console.error(err);

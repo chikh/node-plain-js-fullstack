@@ -72,9 +72,26 @@ describe('Server', () => {
   });
 
   describe('The data path', () => {
-    it('should save grid data into empty table', done => {
+    it('should save grid data', done => {
       const rowId1 = guid();
       const rowId2 = guid();
+      const previousData = [{
+        columnId: 'size',
+        rowId: rowId1,
+        value: 42
+      }, {
+        columnId: 'color',
+        rowId: rowId1,
+        value: null
+      }, {
+        columnId: 'color',
+        rowId: rowId2,
+        value: null
+      }, {
+        columnId: 'size',
+        rowId: rowId2,
+        value: null
+      }];
       const incomingPayload = [{
         columnId: 'size',
         rowId: rowId1,
@@ -90,16 +107,20 @@ describe('Server', () => {
       }];
 
       supertest(server)
-      .put('/model/apples')
-      .set('Content-Type', 'application/json; charset=UTF-8')
-      .send(incomingPayload)
-      .expect(200).end(err => {
-        dataSourceStub.saveData.should.be.calledWith({
-          modelName: 'apples',
-          data: incomingPayload
+        .put('/model/apples')
+        .set('Content-Type', 'application/json; charset=UTF-8')
+        .send({
+          nextState: incomingPayload,
+          previousState: previousData
+        })
+        .expect(200).end(err => {
+          dataSourceStub.saveData.should.be.calledWith({
+            modelName: 'apples',
+            nextState: incomingPayload,
+            previousState: previousData
+          });
+          done(err);
         });
-        done(err);
-      });
     });
   });
 });

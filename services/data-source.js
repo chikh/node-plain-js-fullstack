@@ -36,7 +36,30 @@ module.exports = () => {
     tableName: modelName
   });
 
+  const stateToEntities = state =>
+    _.map(
+      _.groupBy(state, cell => cell.rowId),
+      (fieldValues, entityId) => _
+      .merge(
+        {
+          id: entityId
+        },
+        _.mapValues(
+          _.groupBy(fieldValues,
+            fv => fv.columnId
+          ),
+          values => {
+            const value = values[0].value;
+            if (value !== '') {
+              return value;
+            }
+          }
+        )
+      )
+    );
+
   return {
+
     createTable: model => {
       return knex.schema.hasTable(model.tableName).then(exists => {
         if (!exists) {
@@ -48,11 +71,13 @@ module.exports = () => {
         }
       });
     },
+
     dataForModel: modelName => {
       return bookshelfModelFor(modelName)
         .fetchAll()
         .then(collection => collection.serialize());
     },
+
     addRow: modelName => {
       return bookshelfModelFor(modelName).forge().save({
         id: aguid()
@@ -61,34 +86,14 @@ module.exports = () => {
 
     saveData: modelNameAndData => {
       const modelName = modelNameAndData.modelName;
-      const data = modelNameAndData.data;
-      const entities =
-        _.map(
-          _.groupBy(data, cell => cell.rowId),
-          (fieldValues, entityId) => _
-          .merge(
-            {
-              id: entityId
-            },
-            _.mapValues(
-              _.groupBy(fieldValues,
-                fv => fv.columnId
-              ),
-              values => {
-                const value = values[0].value;
-                if (value !== '') {
-                  return value;
-                }
-              }
-            )
-          )
-        );
-      const models = bookshelf.Collection.extend({
+      const nextState = modelNameAndData.nextState;
+      const nextStateEntities = stateToEntities(nextState);
+
+      const entityModels = bookshelf.Collection.extend({
         model: bookshelf.Model.extend({
           tableName: modelName
         })
-      });
-      const entityModels = models.forge(entities);
+      }).forge(nextStateEntities);
       return Promise.all(entityModels.invoke('save'));
     }
   };

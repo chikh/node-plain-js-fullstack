@@ -40,13 +40,16 @@
     }).get();
   };
 
-  window.saveGrid = function(modelName) {
+  window.saveGrid = function(modelName, initialCellsData) {
     $.ajax({
       url: '/model/' + modelName,
       method: 'put',
       contentType: 'application/json; charset=UTF-8',
       dataType: 'json',
-      data: JSON.stringify(dataFromInputs())
+      data: JSON.stringify({
+        previousState: initialCellsData,
+        nextState: dataFromInputs()
+      })
     }).done(function(response) {
       // TODO
       console.log(response);

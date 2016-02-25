@@ -113,13 +113,15 @@ describe('Datasource', () => {
         .catch(e => done(e));
     });
 
+    const emptyEntitesBy = entities => entities.map(entity => {
+      return {
+        id: entity.id
+      };
+    });
+
     const testOnPrecreatedEmptyRows = (dataToSave, expectedData, done) => {
       knex(modelName)
-        .insert(expectedData.map(entity => {
-          return {
-            id: entity.id
-          };
-        }))
+        .insert(emptyEntitesBy(expectedData))
         .then(() => dataSource.saveData(dataToSave))
         .then(() => knex(modelName).select())
         .then(rows => {
@@ -132,24 +134,26 @@ describe('Datasource', () => {
     it('should save data into empty rows', done => {
       const rowId1 = guid();
       const rowId2 = guid();
+      const nextState = [{
+        rowId: rowId1,
+        columnId: 'color',
+        value: 'red'
+      }, {
+        rowId: rowId1,
+        columnId: 'size',
+        value: 42
+      }, {
+        rowId: rowId2,
+        value: 'green',
+        columnId: 'color'
+      }, {
+        rowId: rowId2,
+        columnId: 'size'
+      }];
       const dataToSave = {
         modelName: modelName,
-        data: [{
-          rowId: rowId1,
-          columnId: 'color',
-          value: 'red'
-        }, {
-          rowId: rowId1,
-          columnId: 'size',
-          value: 42
-        }, {
-          rowId: rowId2,
-          value: 'green',
-          columnId: 'color'
-        }, {
-          rowId: rowId2,
-          columnId: 'size'
-        }]
+        previousState: emptyEntitesBy(nextState),
+        nextState: nextState
       };
       const expectedData = [{
         id: rowId1,
@@ -166,17 +170,19 @@ describe('Datasource', () => {
 
     it('should properly handle empty values', done => {
       const rowId2 = guid();
+      const nextState = [{
+        rowId: rowId2,
+        value: 'green',
+        columnId: 'color'
+      }, {
+        rowId: rowId2,
+        value: '',
+        columnId: 'size'
+      }];
       const dataToSave = {
         modelName: modelName,
-        data: [{
-          rowId: rowId2,
-          value: 'green',
-          columnId: 'color'
-        }, {
-          rowId: rowId2,
-          value: '',
-          columnId: 'size'
-        }]
+        nextState: nextState,
+        previousState: emptyEntitesBy(nextState)
       };
       const expectedData = [{
         id: rowId2,
