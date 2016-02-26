@@ -37,6 +37,17 @@ module.exports = () => {
     tableName: modelName
   });
 
+  const entitiesToState =
+    entities => _.flatMap(entities, entity =>
+      _.map(_.omit(entity, 'id'), (value, columnOrId) => {
+        return {
+          rowId: entity.id,
+          columnId: columnOrId,
+          value: value
+        };
+      })
+    );
+
   const stateToEntities = state => {
     const groupByRowId = fp.groupBy(cell => cell.rowId);
 
@@ -104,29 +115,21 @@ module.exports = () => {
 
     saveData: modelNameAndData => {
       const modelName = modelNameAndData.modelName;
-      const nextState = modelNameAndData.nextState;
-      const nextStateEntities = stateToEntities(nextState);
       const previousStateEntities = modelNameAndData.previousState;
 
-      const nextStateModels =
-        entitiesToModelsCollection(modelName, nextStateEntities);
-
       return bookshelfModelFor(modelName).fetchAll()
-        .then(currentState => {
-          const currentStateEntities = currentState.serialize();
-          return _.isEmpty(
-            _.differenceWith(
-              currentStateEntities, previousStateEntities, _.isEqual
-            )
+        .then(currentStateModels => {
+          const currentState = entitiesToState(currentStateModels.serialize());
+          return _.differenceWith(
+            currentState, entitiesToState(previousStateEntities), _.isEqual
           );
         })
-        .then(isEligible => {
-          if (isEligible) {
-            return nextStateModels.invokeThen('save');
-          } else {
-            return Promise.resolve('TODO: cant save');
-          }
-        });
+        .then(difference => (_.isEmpty(difference)) ?
+          entitiesToModelsCollection(
+            modelName, stateToEntities(modelNameAndData.nextState)
+          ).invokeThen('save') :
+          difference.map(cell => _.omit(cell, 'value'))
+        );
     }
   };
 };

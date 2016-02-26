@@ -115,31 +115,25 @@ describe('Datasource', () => {
     });
 
     const emptyEntitesBy = entities => entities.map(entity => {
-      return _.mapValues(entity, (v, k) => {
-        if (k === 'id') {
-          return v;
-        } else {
-          return null;
-        }
-      });
+      return _.mapValues(entity, (v, k) => (k === 'id') ? v : null);
     });
 
-    const clearedValuesState = state =>
-      state.map(cell => _.merge(_.cloneDeep(cell), {
-        value: null
-      }));
-
-    const testOnPrecreatedEmptyRows = (dataToSave, expectedData, done) => {
-      knex(modelName)
-        .insert(emptyEntitesBy(expectedData))
-        .then(() => dataSource.saveData(dataToSave))
-        .then(() => knex(modelName).select())
-        .then(rows => {
-          rows.should.be.deep.equal(expectedData);
-          done();
-        })
-        .catch(e => done(e));
-    };
+    const testOnPrecreatedEmptyRows =
+      (dataToSave, expectedData, done, additionalAsserts) => {
+        if (!additionalAsserts) {
+          additionalAsserts = () => {};
+        }
+        knex(modelName)
+          .insert(emptyEntitesBy(expectedData))
+          .then(() => dataSource.saveData(dataToSave))
+          .then(saveDataResult => knex(modelName).select()
+            .then(rows => {
+              additionalAsserts(saveDataResult, rows);
+              rows.should.be.deep.equal(expectedData);
+              done();
+            }))
+          .catch(e => done(e));
+      };
 
     const dataToSave = (modelName, previousState, nextState) => {
       return {
@@ -207,28 +201,41 @@ describe('Datasource', () => {
       testOnPrecreatedEmptyRows(data, expectedData, done);
     });
 
+    const illegalStateTest = (assertFun, done) => {
+      const rowId = guid();
+      const nextState = [{
+        rowId: rowId,
+        columnId: 'color',
+        value: 'red'
+      }];
+      const previousState = [{
+        id: rowId,
+        color: 'green',
+        size: null
+      }];
+      const expectedData = [{
+        id: rowId,
+        color: null,
+        size: null
+      }];
+      const data = dataToSave(modelName, previousState, nextState);
+
+      assertFun(data, expectedData, done);
+    };
+
     it('shouldn\'t save data if previous state ' +
       'isn\'t equal to the current state of DB',
-      done => {
-        const rowId = guid();
-        const nextState = [{
-          rowId: rowId,
-          columnId: 'color',
-          value: 'red'
-        }];
-        const previousState = [{
-          id: rowId,
-          color: 'green',
-          size: null
-        }];
-        const expectedData = [{
-          id: rowId,
-          color: null,
-          size: null
-        }];
-        const data = dataToSave(modelName, previousState, nextState);
+      done => illegalStateTest(testOnPrecreatedEmptyRows, done)
+    );
 
-        testOnPrecreatedEmptyRows(data, expectedData, done);
-      });
+    it('should return rowId and colId of illegal state value', done =>
+      illegalStateTest((data, expectedData, done) =>
+        testOnPrecreatedEmptyRows(data, expectedData, done, (result, rows) => {
+          result.should.be.deep.equal([{
+            rowId: rows[0].id,
+            columnId: 'color'
+          }]);
+        }), done)
+    );
   });
 });
