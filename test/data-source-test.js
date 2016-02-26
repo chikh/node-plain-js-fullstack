@@ -13,6 +13,7 @@ const knex = require('knex')({
   }
 });
 const guid = require('aguid');
+const _ = require('lodash');
 
 const testTableName = 'tableFromTest';
 
@@ -93,7 +94,7 @@ describe('Datasource', () => {
       .catch(e => done(e));
   });
 
-  describe('Save data method', () => {
+  describe('save data method', () => {
     const modelName = 'apples';
 
     beforeEach(done => {
@@ -114,24 +115,35 @@ describe('Datasource', () => {
     });
 
     const emptyEntitesBy = entities => entities.map(entity => {
-      return {
-        id: entity.id
-      };
+      return _.mapValues(entity, (v, k) => (k === 'id') ? v : null);
     });
 
-    const testOnPrecreatedEmptyRows = (dataToSave, expectedData, done) => {
-      knex(modelName)
-        .insert(emptyEntitesBy(expectedData))
-        .then(() => dataSource.saveData(dataToSave))
-        .then(() => knex(modelName).select())
-        .then(rows => {
-          rows.should.be.deep.equal(expectedData);
-          done();
-        })
-        .catch(e => done(e));
+    const testOnPrecreatedEmptyRows =
+      (dataToSave, expectedData, done, additionalAsserts) => {
+        if (!additionalAsserts) {
+          additionalAsserts = () => {};
+        }
+        knex(modelName)
+          .insert(emptyEntitesBy(expectedData))
+          .then(() => dataSource.saveData(dataToSave))
+          .then(saveDataResult => knex(modelName).select()
+            .then(rows => {
+              additionalAsserts(saveDataResult, rows);
+              rows.should.be.deep.equal(expectedData);
+              done();
+            }))
+          .catch(e => done(e));
+      };
+
+    const dataToSave = (modelName, previousState, nextState) => {
+      return {
+        modelName: modelName,
+        previousState: previousState,
+        nextState: nextState
+      };
     };
 
-    it('should save data into empty rows', done => {
+    it('should successfully save data into empty rows', done => {
       const rowId1 = guid();
       const rowId2 = guid();
       const nextState = [{
@@ -150,11 +162,6 @@ describe('Datasource', () => {
         rowId: rowId2,
         columnId: 'size'
       }];
-      const dataToSave = {
-        modelName: modelName,
-        previousState: emptyEntitesBy(nextState),
-        nextState: nextState
-      };
       const expectedData = [{
         id: rowId1,
         color: 'red',
@@ -164,8 +171,13 @@ describe('Datasource', () => {
         color: 'green',
         size: null
       }];
+      const data = dataToSave(
+        modelName, emptyEntitesBy(expectedData), nextState
+      );
 
-      testOnPrecreatedEmptyRows(dataToSave, expectedData, done);
+      testOnPrecreatedEmptyRows(data, expectedData, done, result => {
+        result.should.include.keys('success');
+      });
     });
 
     it('should properly handle empty values', done => {
@@ -179,18 +191,55 @@ describe('Datasource', () => {
         value: '',
         columnId: 'size'
       }];
-      const dataToSave = {
-        modelName: modelName,
-        nextState: nextState,
-        previousState: emptyEntitesBy(nextState)
-      };
       const expectedData = [{
         id: rowId2,
         color: 'green',
         size: null
       }];
+      const data = dataToSave(
+        modelName, emptyEntitesBy(expectedData), nextState
+      );
 
-      testOnPrecreatedEmptyRows(dataToSave, expectedData, done);
+      testOnPrecreatedEmptyRows(data, expectedData, done);
     });
+
+    const illegalStateTest = (assertFun, done) => {
+      const rowId = guid();
+      const nextState = [{
+        rowId: rowId,
+        columnId: 'color',
+        value: 'red'
+      }];
+      const previousState = [{
+        id: rowId,
+        color: 'green',
+        size: null
+      }];
+      const expectedData = [{
+        id: rowId,
+        color: null,
+        size: null
+      }];
+      const data = dataToSave(modelName, previousState, nextState);
+
+      assertFun(data, expectedData, done);
+    };
+
+    it('shouldn\'t save data if previous state ' +
+      'isn\'t equal to the current state of DB',
+      done => illegalStateTest(testOnPrecreatedEmptyRows, done)
+    );
+
+    it('should return rowId and colId of illegal state value', done =>
+      illegalStateTest((data, expectedData, done) =>
+        testOnPrecreatedEmptyRows(data, expectedData, done, (result, rows) => {
+          result.should.be.deep.equal({
+            failure: [{
+              rowId: rows[0].id,
+              columnId: 'color'
+            }]
+          });
+        }), done)
+    );
   });
 });

@@ -8,7 +8,7 @@ block content
    h1 #{modelName}
  .container.toolbar.btn-toolbar
    button.btn.btn-primary(type="button", onclick="addRow('#{modelName}')") Add empty row
-   button#save-button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}')") Save
+   button#save-button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}', #{JSON.stringify(rows)})") Save
  .container
    table.table.table-bordered
      thead
