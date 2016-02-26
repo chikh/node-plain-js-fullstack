@@ -11,6 +11,7 @@ const knex = require('knex')({
 const bookshelf = require('bookshelf')(knex);
 
 module.exports = () => {
+  const fp = require('lodash/fp');
   const _ = require('lodash');
   const aguid = require('aguid');
 
@@ -36,26 +37,37 @@ module.exports = () => {
     tableName: modelName
   });
 
-  const stateToEntities = state =>
-    _.map(
-      _.groupBy(state, cell => cell.rowId),
-      (fieldValues, entityId) => _
-      .merge({
-          id: entityId
-        },
-        _.mapValues(
-          _.groupBy(fieldValues,
-            fv => fv.columnId
-          ),
-          values => {
-            const value = values[0].value;
-            if (value !== '') {
-              return value;
-            }
-          }
-        )
+  const stateToEntities = state => {
+    const groupByRowId = fp.groupBy(cell => cell.rowId);
+
+    const flatMapValues = fp.mapValues(
+      values => {
+        const value = values[0].value;
+        if (value !== '') {
+          return value;
+        }
+      }
+    );
+
+    const groupByColumnId = fp.groupBy(
+      fv => fv.columnId
+    );
+
+    const mergeAttributesInto = entityId => fp.merge({
+      id: entityId
+    });
+
+    const mapRows = fp.map(
+      fieldValues =>
+      mergeAttributesInto(
+        fieldValues[0].rowId
+      )(
+        flatMapValues(groupByColumnId(fieldValues))
       )
     );
+
+    return mapRows(groupByRowId(state));
+  };
 
   const entitiesToModelsCollection = (modelName, entities) => {
     const EntityModel = bookshelf.Collection.extend({
