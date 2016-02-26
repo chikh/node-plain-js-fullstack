@@ -127,8 +127,13 @@ module.exports = () => {
         .then(difference => (_.isEmpty(difference)) ?
           entitiesToModelsCollection(
             modelName, stateToEntities(modelNameAndData.nextState)
-          ).invokeThen('save') :
-          difference.map(cell => _.omit(cell, 'value'))
+          ).invokeThen('save').then(saveDataResult => {
+            return {
+              success: saveDataResult
+            };
+          }) : {
+            failure: difference.map(cell => _.omit(cell, 'value'))
+          }
         );
     }
   };

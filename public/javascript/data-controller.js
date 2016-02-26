@@ -51,9 +51,16 @@
         nextState: dataFromInputs()
       })
     }).done(function(response) {
-      // TODO
-      console.log(response);
-      document.location.reload();
+      if (response.success) {
+        document.location.reload();
+      } else if (response.failure) {
+        response.failure.forEach(function(rowAndColumn) {
+          $('tr#' + rowAndColumn.rowId + ' > td.' + rowAndColumn.columnId)
+            .css('border-style', 'solid')
+            .css('border-width', '5px')
+            .css('border-color', 'red');
+        });
+      }
     });
   };
 })();

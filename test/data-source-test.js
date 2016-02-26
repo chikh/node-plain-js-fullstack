@@ -143,7 +143,7 @@ describe('Datasource', () => {
       };
     };
 
-    it('should save data into empty rows', done => {
+    it('should successfully save data into empty rows', done => {
       const rowId1 = guid();
       const rowId2 = guid();
       const nextState = [{
@@ -175,7 +175,9 @@ describe('Datasource', () => {
         modelName, emptyEntitesBy(expectedData), nextState
       );
 
-      testOnPrecreatedEmptyRows(data, expectedData, done);
+      testOnPrecreatedEmptyRows(data, expectedData, done, result => {
+        result.should.include.keys('success');
+      });
     });
 
     it('should properly handle empty values', done => {
@@ -231,10 +233,12 @@ describe('Datasource', () => {
     it('should return rowId and colId of illegal state value', done =>
       illegalStateTest((data, expectedData, done) =>
         testOnPrecreatedEmptyRows(data, expectedData, done, (result, rows) => {
-          result.should.be.deep.equal([{
-            rowId: rows[0].id,
-            columnId: 'color'
-          }]);
+          result.should.be.deep.equal({
+            failure: [{
+              rowId: rows[0].id,
+              columnId: 'color'
+            }]
+          });
         }), done)
     );
   });
