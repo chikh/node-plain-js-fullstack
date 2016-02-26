@@ -115,9 +115,13 @@ describe('Datasource', () => {
     });
 
     const emptyEntitesBy = entities => entities.map(entity => {
-      return {
-        id: entity.id
-      };
+      return _.mapValues(entity, (v, k) => {
+        if (k === 'id') {
+          return v;
+        } else {
+          return null;
+        }
+      });
     });
 
     const clearedValuesState = state =>
@@ -174,7 +178,7 @@ describe('Datasource', () => {
         size: null
       }];
       const data = dataToSave(
-        modelName, clearedValuesState(nextState), nextState
+        modelName, emptyEntitesBy(expectedData), nextState
       );
 
       testOnPrecreatedEmptyRows(data, expectedData, done);
@@ -197,7 +201,7 @@ describe('Datasource', () => {
         size: null
       }];
       const data = dataToSave(
-        modelName, clearedValuesState(nextState), nextState
+        modelName, emptyEntitesBy(expectedData), nextState
       );
 
       testOnPrecreatedEmptyRows(data, expectedData, done);
@@ -213,9 +217,9 @@ describe('Datasource', () => {
           value: 'red'
         }];
         const previousState = [{
-          rowId: rowId,
-          columnId: 'color',
-          value: 'green'
+          id: rowId,
+          color: 'green',
+          size: null
         }];
         const expectedData = [{
           id: rowId,

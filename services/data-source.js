@@ -106,8 +106,7 @@ module.exports = () => {
       const modelName = modelNameAndData.modelName;
       const nextState = modelNameAndData.nextState;
       const nextStateEntities = stateToEntities(nextState);
-      const previousStateEntities =
-        stateToEntities(modelNameAndData.previousState);
+      const previousStateEntities = modelNameAndData.previousState;
 
       const nextStateModels =
         entitiesToModelsCollection(modelName, nextStateEntities);
