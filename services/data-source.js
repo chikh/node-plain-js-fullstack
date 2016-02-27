@@ -123,7 +123,6 @@ module.exports = () => {
 
     saveData: modelNameAndData => {
       const previousStateEntities = modelNameAndData.previousState;
-      // console.log(require('util').inspect(modelNameAndData, { depth: null }));
 
       return (modelNameAndData.override === true) ?
         saveNextState(modelNameAndData) :
