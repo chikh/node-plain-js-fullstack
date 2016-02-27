@@ -87,6 +87,14 @@ module.exports = () => {
     return new EntityModel().add(entities);
   };
 
+  const saveNextState = modelNameAndData => entitiesToModelsCollection(
+    modelNameAndData.modelName, stateToEntities(modelNameAndData.nextState)
+  ).invokeThen('save').then(saveDataResult => {
+    return {
+      success: saveDataResult
+    };
+  });
+
   return {
 
     createTable: model => {
@@ -114,10 +122,12 @@ module.exports = () => {
     },
 
     saveData: modelNameAndData => {
-      const modelName = modelNameAndData.modelName;
       const previousStateEntities = modelNameAndData.previousState;
+      // console.log(require('util').inspect(modelNameAndData, { depth: null }));
 
-      return bookshelfModelFor(modelName).fetchAll()
+      return (modelNameAndData.override === true) ?
+        saveNextState(modelNameAndData) :
+        bookshelfModelFor(modelNameAndData.modelName).fetchAll()
         .then(currentStateModels => {
           const currentState = entitiesToState(currentStateModels.serialize());
           return _.differenceWith(
@@ -125,13 +135,7 @@ module.exports = () => {
           );
         })
         .then(difference => (_.isEmpty(difference)) ?
-          entitiesToModelsCollection(
-            modelName, stateToEntities(modelNameAndData.nextState)
-          ).invokeThen('save').then(saveDataResult => {
-            return {
-              success: saveDataResult
-            };
-          }) : {
+          saveNextState(modelNameAndData) : {
             failure: difference.map(cell => _.omit(cell, 'value'))
           }
         );

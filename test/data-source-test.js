@@ -241,5 +241,16 @@ describe('Datasource', () => {
           });
         }), done)
     );
+
+    it('should be successful if "override" flag is true', done =>
+      illegalStateTest((data, expectedData, done) =>
+        testOnPrecreatedEmptyRows(_.assign(data, {
+          override: true
+        }), expectedData.map(data => _.assign(data, {
+          color: 'red'
+        })), done, result => {
+          result.should.include.keys('success');
+        }), done)
+    );
   });
 });

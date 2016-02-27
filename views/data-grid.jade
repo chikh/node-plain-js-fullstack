@@ -4,22 +4,33 @@ block title
   title Data of #{modelName}
 
 block content
- .container
-   h1 #{modelName}
- .container.toolbar.btn-toolbar
-   button.btn.btn-primary(type="button", onclick="addRow('#{modelName}')") Add empty row
-   button#save-button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}', #{JSON.stringify(rows)})") Save
- .container
-   table.table.table-bordered
-     thead
-       each column in columns
-         th.clickable(onclick="editColumn('#{column.id}')")= column.label
-     tbody#rows
-       each row in rows
-         tr(id='#{row.id}')
-           each column in columns
-             td(class='#{column.id}')
-               div= row[column.id]
+  .container
+    h1 #{modelName}
+  .container.toolbar.btn-toolbar
+    button.btn.btn-primary(type="button", onclick="addRow('#{modelName}')") Add empty row
+    button#save-button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}', #{JSON.stringify(rows)})") Save
+  .container
+    table.table.table-bordered
+      thead
+        each column in columns
+          th.clickable(onclick="editColumn('#{column.id}')")= column.label
+      tbody#rows
+        each row in rows
+          tr(id='#{row.id}')
+            each column in columns
+              td(class='#{column.id}')
+                div= row[column.id]
+
+  #override-modal.modal.fade.bs-example-modal-sm(tabindex="-1", role="dialog", aria-labelledby="modalLabel")
+    .modal-dialog.modal-sm
+     .modal-content
+       .modal-header
+         h4#modalLabel.modal-title Data have been changed
+       .modal-body
+         p Data have already been changed by another user. Do you want to override it?
+       .modal-footer
+         button.btn.btn-primary(type="button", onclick="onCancel()") Discard changes
+         button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}', #{JSON.stringify(rows)}, true)") Override data
  
 block imports
   script(src="/javascript/data-controller.js")

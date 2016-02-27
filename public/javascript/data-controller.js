@@ -40,13 +40,14 @@
     }).get();
   };
 
-  window.saveGrid = function(modelName, initialCellsData) {
+  window.saveGrid = function(modelName, initialCellsData, override) {
     $.ajax({
       url: '/model/' + modelName,
       method: 'put',
       contentType: 'application/json; charset=UTF-8',
       dataType: 'json',
       data: JSON.stringify({
+        override: override,
         previousState: initialCellsData,
         nextState: dataFromInputs()
       })
@@ -59,8 +60,13 @@
             .css('border-style', 'solid')
             .css('border-width', '5px')
             .css('border-color', 'red');
+          $('#override-modal').modal('show');
         });
       }
     });
+  };
+
+  window.onCancel = function() {
+    document.location.reload();
   };
 })();
