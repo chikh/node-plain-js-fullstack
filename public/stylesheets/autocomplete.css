@@ -1,0 +1,17 @@
+.autocomplete-option {
+  width: 80px;
+  height: 30px;
+  padding: 5px 5px 5px 5px;
+}
+
+#autocomplete-component {
+  position: absolute;
+  z-index: 1000;
+  opacity: 1;
+  padding: 5px 5px 5px 5px;
+  background: white;
+  box-shadow: 5px 5px 2px #888888;
+  border-style: solid;
+  border-width: 1px;
+  border-color: grey;
+}

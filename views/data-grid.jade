@@ -7,8 +7,9 @@ block content
   .container
     h1 #{modelName}
   .container.toolbar
-    button.btn.btn-primary(type="button", onclick="addRow('#{modelName}')") Add empty row
-    button#save-button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}', #{JSON.stringify(rows)})") Save
+    .btn-toolbar
+      button.btn.btn-primary(type="button", onclick="addRow('#{modelName}')") Add empty row
+      button#save-button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}', #{JSON.stringify(rows)})") Save
   .container
     table.table.table-bordered
       thead
@@ -33,5 +34,6 @@ block content
          button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}', #{JSON.stringify(rows)}, true)") Override data
  
 block imports
+  link(rel="stylesheet", href="/stylesheets/autocomplete.css")
   script(src="/javascript/data-controller.js")
   script(src="/javascript/autocomplete.js")

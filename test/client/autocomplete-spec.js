@@ -25,8 +25,8 @@ describe('Autocomplete component', function() {
       window.autocomplete.initialize(function() {
         return ['value1', 'value2', 'value3'];
       });
-      $('#autocomplete-selection').should.exist;
-      $('#autocomplete-selectoin').should.be.invisible;
+      $('#autocomplete-component').should.exist;
+      $('#autocomplete-component').should.be.invisible;
     });
   });
 
