@@ -3,11 +3,11 @@
 /* global editColumn */
 /* eslint no-unused-expressions: 0 */
 
-describe('Data controller', () => {
-  const fixtureDivId = 'data-table-fixture';
+describe('Data controller', function() {
+  var fixtureDivId = 'data-table-fixture';
 
-  beforeEach(() => {
-    const tableBody =
+  beforeEach(function() {
+    var tableBody =
       '<div id="' + fixtureDivId + '">' +
       '<table>' +
       '<thead><tr><th>Size</th></tr></thead>' +
@@ -19,12 +19,12 @@ describe('Data controller', () => {
     document.body.insertAdjacentHTML('afterbegin', tableBody);
   });
 
-  afterEach(() => {
+  afterEach(function() {
     document.body.removeChild(document.getElementById(fixtureDivId));
   });
 
-  it('replace columns data with input controls', () => {
-    const column = 'sizeColumn';
+  it('replace columns data with input controls', function() {
+    var column = 'sizeColumn';
     editColumn(column);
     $('td.' + column).should.have.descendants('input');
     $('td.' + column + ' > input').should.have.value('42');
