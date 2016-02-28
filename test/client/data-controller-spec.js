@@ -1,26 +1,19 @@
 'use strict';
 
-/* global editColumn */
+/* global editColumn fixture*/
 /* eslint no-unused-expressions: 0 */
 
+before(function() {
+  fixture.setBase('test/client/fixtures');
+});
+
+afterEach(function() {
+  fixture.cleanup();
+});
+
 describe('Data controller', function() {
-  var fixtureDivId = 'data-table-fixture';
-
   beforeEach(function() {
-    var tableBody =
-      '<div id="' + fixtureDivId + '">' +
-      '<table>' +
-      '<thead><tr><th>Size</th></tr></thead>' +
-      '<tbody>' +
-      '<tr id="rowId1"><td class="sizeColumn"><div>42</div></td></tr>' +
-      '</tbody>' +
-      '</table>' +
-      '</div>';
-    document.body.insertAdjacentHTML('afterbegin', tableBody);
-  });
-
-  afterEach(function() {
-    document.body.removeChild(document.getElementById(fixtureDivId));
+    fixture.load('data-table-one-cell.html');
   });
 
   it('replace columns data with input controls', function() {

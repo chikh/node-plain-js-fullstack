@@ -9,25 +9,28 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'chai', 'chai-jquery', 'sinon-chai', 'jquery-2.1.0'],
+    frameworks: [
+      'mocha', 'fixture', 'chai', 'chai-jquery', 'sinon-chai', 'jquery-2.1.0'
+    ],
 
 
     // list of files / patterns to load in the browser
     files: [
       'public/javascript/lib/jquery-2.2.1.min.js',
       'public/javascript/**/*.js',
-      'test/client/**/*-spec.js'
+      'test/client/**/*-spec.js',
+      'test/client/fixtures/*.html'
     ],
 
 
     // list of files to exclude
-    exclude: [
-    ],
+    exclude: [],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      '**/*.html': ['html2js']
     },
 
 

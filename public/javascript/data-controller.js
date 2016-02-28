@@ -5,12 +5,31 @@
     $('button#save-button').hide();
   });
 
+  var rowIdFor = function(cellElem) {
+    return cellElem.parent().closest('tr').attr('id');
+  };
+
   window.editColumn = function(columnId) {
+    var values = [];
     $('td.' + columnId + ' > div').each(function(i, elem) {
       var div = $(elem);
-      var input = $('<input type="text"/>').val(div.text());
+      var rowId = rowIdFor(div);
+      var divValue = div.text();
+      values.push(divValue);
+      var input =
+        $('<input type="text" class="autocomplete"/>')
+        .val(divValue)
+        .attr('id', 'input-' + rowId)
+        .attr('class', 'autocomplete')
+        .attr('autocomplete-collection', columnId);
       div.replaceWith(input);
     });
+
+    if (window.autocomplete) {
+      window.autocomplete.initialize(function() {
+        return values;
+      });
+    }
 
     $('button#save-button').show();
   };
@@ -28,7 +47,7 @@
     return $('input').map(function(i, elem) {
       var input = $(elem);
       var columnId = input.parent().closest('td').attr('class');
-      var rowId = input.parent().closest('tr').attr('id');
+      var rowId = rowIdFor(input);
       var value = input.val();
       return {
         columnId: columnId,

@@ -6,7 +6,7 @@ block title
 block content
   .container
     h1 #{modelName}
-  .container.toolbar.btn-toolbar
+  .container.toolbar
     button.btn.btn-primary(type="button", onclick="addRow('#{modelName}')") Add empty row
     button#save-button.btn.btn-default(type="button", onclick="saveGrid('#{modelName}', #{JSON.stringify(rows)})") Save
   .container
@@ -34,3 +34,4 @@ block content
  
 block imports
   script(src="/javascript/data-controller.js")
+  script(src="/javascript/autocomplete.js")
