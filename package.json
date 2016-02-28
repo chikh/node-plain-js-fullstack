@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server",
-    "test": "./node_modules/.bin/mocha",
+    "test": "./node_modules/.bin/mocha && ./node_modules/.bin/karma start --single-run",
     "dev": "./node_modules/.bin/nodemon"
   },
   "repository": {
@@ -36,8 +36,17 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "chai-jquery": "^2.0.0",
     "eslint": "^2.2.0",
     "eslint-config-google": "^0.4.0",
+    "karma": "^0.13.21",
+    "karma-chai": "^0.1.0",
+    "karma-chai-jquery": "^1.0.0",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-jquery": "^0.1.0",
+    "karma-mocha": "^0.2.2",
+    "karma-sinon-chai": "^1.2.0",
     "mocha": "^2.4.5",
     "nodemon": "^1.9.0",
     "sinon": "^1.17.3",
