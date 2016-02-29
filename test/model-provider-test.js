@@ -1,6 +1,6 @@
 'use strict';
 
-/* eslint no-unused-expressions: 1 */
+/* eslint no-unused-expressions: 0 */
 
 const path = require('path');
 const chai = require('chai');

@@ -10,12 +10,14 @@ module.exports = function(config) {
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: [
-      'mocha', 'fixture', 'chai', 'chai-jquery', 'sinon-chai', 'jquery-2.1.0'
+      'mocha', 'fixture', 'chai',
+      'chai-jquery', 'sinon-chai', 'jquery-2.1.0'
     ],
 
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/lodash/lodash.js',
       'public/javascript/lib/jquery-2.2.1.min.js',
       'public/javascript/**/*.js',
       'test/client/**/*-spec.js',
@@ -69,5 +71,5 @@ module.exports = function(config) {
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity
-  })
-}
+  });
+};

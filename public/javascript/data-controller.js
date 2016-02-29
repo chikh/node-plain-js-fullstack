@@ -27,7 +27,9 @@
 
     if (window.autocomplete) {
       window.autocomplete.initialize(function() {
-        return values;
+        var columnValues = {};
+        columnValues[columnId] = values;
+        return columnValues;
       });
     }
 
