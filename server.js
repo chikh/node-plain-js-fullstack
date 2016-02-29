@@ -25,6 +25,9 @@ const run = (callback, port) => (modelProvider, dataSource) => {
 
   app.use(bodyParser.json());
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use(
+    express.static(path.join(__dirname, 'node_modules', 'lodash'))
+  );
 
   const modelRouter = require(path.join(__dirname, 'routes', 'model'));
   const dataRouter = require(path.join(__dirname, 'routes', 'data'));

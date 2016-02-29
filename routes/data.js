@@ -1,6 +1,6 @@
 'use strict';
 
-/* eslint new-cap: 1 */
+/* eslint new-cap: 0 */
 
 module.exports = (modelProvider, dataSource) => {
   const _ = require('lodash');
