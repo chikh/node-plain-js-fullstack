@@ -35,21 +35,36 @@
     });
   };
 
+  var inputOnclick = function() {
+    var thisInput = $(this);
+    var collectionKey = thisInput.attr('autocomplete-collection');
+    $('.autocomplete-option').each(function() {
+      var option = $(this);
+      var optionCollectionKey = option.attr('collection-key');
+      if (optionCollectionKey === collectionKey) {
+        option.show();
+      } else {
+        option.hide();
+      }
+    });
+    currentInputId = this.id;
+    var position = $(this).position();
+    var top = position.top + 30;
+    autocompleteComponent.css('top', top + 'px');
+    autocompleteComponent.css('left', position.left);
+    autocompleteComponent.show();
+  };
+
   window.autocomplete.initialize = function(valueSource) {
+    var valuesObject = valueSource();
     if (autocompleteComponent) {
-      autocompleteComponent.append(initializeOptions(valueSource()));
+      autocompleteComponent.append(initializeOptions(valuesObject));
     } else {
       autocompleteComponent = initializeMainComponent();
-      autocompleteComponent.append(initializeOptions(valueSource()));
-      $('input.autocomplete').on('click', function() {
-        currentInputId = this.id;
-        var position = $(this).position();
-        var top = position.top + 30;
-        autocompleteComponent.css('top', top + 'px');
-        autocompleteComponent.css('left', position.left);
-        autocompleteComponent.show();
-      });
+      autocompleteComponent.append(initializeOptions(valuesObject));
     }
+    $('input.autocomplete[autocomplete-collection=' + _.keys(valuesObject)[0] + ']')
+      .on('click', inputOnclick);
   };
 
   window.autocomplete.destroy = function() {

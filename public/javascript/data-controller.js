@@ -17,9 +17,10 @@
       var divValue = div.text();
       values.push(divValue);
       var input =
-        $('<input type="text" class="autocomplete"/>')
+        $('<input type="text"/>')
+        .addClass('autocomplete')
         .val(divValue)
-        .attr('id', 'input-' + rowId)
+        .attr('id', 'input-' + rowId + '-' + columnId)
         .attr('class', 'autocomplete')
         .attr('autocomplete-collection', columnId);
       div.replaceWith(input);

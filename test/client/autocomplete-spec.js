@@ -8,13 +8,22 @@ describe('Autocomplete component', function() {
     window.autocomplete.destroy();
   });
 
-  describe('initialization', function() {
-    var initializeAutocomplete = function(valuesObject) {
-      window.autocomplete.initialize(function() {
-        return valuesObject;
-      });
-    };
+  var initializeAutocomplete = function(valuesObject) {
+    window.autocomplete.initialize(function() {
+      return valuesObject;
+    });
+  };
 
+  var doubleInitializeAutocomplete = function() {
+    initializeAutocomplete({
+      size: ['41', '42']
+    });
+    initializeAutocomplete({
+      color: ['red', 'green']
+    });
+  };
+
+  describe('initialization', function() {
     var initializeAutocompleteWithEmptyValues = function() {
       initializeAutocomplete({});
     };
@@ -22,7 +31,9 @@ describe('Autocomplete component', function() {
     it('should add onclick handler to each input with .autocomplete',
       function() {
         fixture.load('inputs.html');
-        initializeAutocompleteWithEmptyValues();
+        initializeAutocomplete({
+          noMatter: []
+        });
         should.exist(
           $._data(document.getElementById('input1'), 'events').click
         );
@@ -51,18 +62,38 @@ describe('Autocomplete component', function() {
 
     describe('created component', function() {
       it('should have all the values provided', function() {
-        initializeAutocomplete({
-          size: ['41', '42']
-        });
-        initializeAutocomplete({
-          color: ['red', 'green']
-        });
-
-        var options = $('#autocomplete-component > .autocomplete-option');
-        options.should.have.lengthOf(4);
+        doubleInitializeAutocomplete();
+        $('#autocomplete-component > .autocomplete-option')
+          .should.have.lengthOf(4);
       });
+
+      it('should have all provided values ' +
+        'with appropriate "collection-key" attributes',
+        function() {
+          doubleInitializeAutocomplete();
+          $('#autocomplete-component > .autocomplete-option')
+            .each(function(i) {
+              var elem = $(this);
+              if (i < 2) {
+                elem.should.have.attr('collection-key', 'size');
+              } else {
+                elem.should.have.attr('collection-key', 'color');
+              }
+            });
+        });
     });
   });
 
-  describe.skip('autocomplete input onclick', function() {});
+  describe('input onclick', function() {
+    it('should show values for this input\'s collection', function() {
+      fixture.load('four-inputs.html');
+      doubleInitializeAutocomplete();
+      $('input#input-1').click();
+      var visibleOptions = $('.autocomplete-option:visible');
+      visibleOptions.should.have.lengthOf(2);
+      visibleOptions.each(function() {
+        $(this).should.have.attr('collection-key', 'size');
+      });
+    });
+  });
 });
