@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-In order to run the app, you should have *PostgreSQL* up and running on the default port (which is 5432). The app uses database named "*eurochem-test*". Since PostgreSQL runs locally, it is supposed to add
+In order to run the app, you should have *PostgreSQL* up and running on the default port (which is 5432). The app uses database named "*eurochem-test*". Since PostgreSQL runs locally (and not user/password login is intended), it is supposed to add
 ```
 . . .
 
