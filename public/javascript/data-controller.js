@@ -1,3 +1,5 @@
+/* global _ */
+
 (function() {
   'use strict';
 
@@ -27,11 +29,9 @@
     });
 
     if (window.autocomplete) {
-      window.autocomplete.initialize(function() {
-        var columnValues = {};
-        columnValues[columnId] = values;
-        return columnValues;
-      });
+      var columnValues = {};
+      columnValues[columnId] = _.uniq(values);
+      window.autocomplete.initialize(columnValues);
     }
 
     $('button#save-button').show();

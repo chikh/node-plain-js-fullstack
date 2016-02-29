@@ -9,9 +9,7 @@ describe('Autocomplete component', function() {
   });
 
   var initializeAutocomplete = function(valuesObject) {
-    window.autocomplete.initialize(function() {
-      return valuesObject;
-    });
+    window.autocomplete.initialize(valuesObject);
   };
 
   var doubleInitializeAutocomplete = function() {

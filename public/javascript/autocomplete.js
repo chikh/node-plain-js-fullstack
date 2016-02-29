@@ -56,15 +56,14 @@
   };
 
   window.autocomplete.initialize = function(valueSource) {
-    var valuesObject = valueSource();
     if (autocompleteComponent) {
-      autocompleteComponent.append(initializeOptions(valuesObject));
+      autocompleteComponent.append(initializeOptions(valueSource));
     } else {
       autocompleteComponent = initializeMainComponent();
-      autocompleteComponent.append(initializeOptions(valuesObject));
+      autocompleteComponent.append(initializeOptions(valueSource));
     }
-    $('input.autocomplete[autocomplete-collection=' + _.keys(valuesObject)[0] + ']')
-      .on('click', inputOnclick);
+    $('input.autocomplete[autocomplete-collection=' +
+      _.keys(valueSource)[0] + ']').on('click', inputOnclick);
   };
 
   window.autocomplete.destroy = function() {
