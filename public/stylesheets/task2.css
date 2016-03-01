@@ -1,0 +1,232 @@
+@import url(reset.css);
+.pull-right {
+  float: right;
+}
+.pull-left {
+  float: left;
+}
+.last {
+  margin-right: 0 !important;
+}
+i[class*="icon-"] {
+  display: inline-block;
+  background-position: 0 0;
+  background: url('../i/icons.png') no-repeat;
+}
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0;
+}
+.clearfix {
+  display: inline-block;
+}
+* html .clearfix {
+  height: 1%;
+}
+.clearfix {
+  display: block;
+}
+body {
+  font-size: 14px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+.container {
+  margin: 0 auto;
+  min-width: 980px;
+  max-width: 1200px;
+}
+header .wrap-bg-color-menu {
+  background: #525659;
+}
+header .top-menu ul {
+  list-style-type: none;
+  padding: 25px 0;
+}
+header .top-menu ul li {
+  color: #fff;
+  float: left;
+  position: relative;
+  margin: 0 40px 0 0;
+}
+header .top-menu ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+header .top-menu ul li i.icon-down {
+  width: 11px;
+  height: 6px;
+  margin-left: 7px;
+}
+header .top-menu ul li i.icon-message {
+  top: -3px;
+  width: 20px;
+  left: -40px;
+  height: 18px;
+  position: absolute;
+  background-position: 0 -6px;
+}
+header .wrap-top-menu {
+  padding: 40px 0;
+}
+header .wrap-top-menu .logo {
+  float: left;
+}
+header .wrap-top-menu .logo img {}
+header .wrap-top-menu ul {
+  float: right;
+  list-style-type: none;
+  padding-top: 7px;
+}
+header .wrap-top-menu ul li {
+  float: left;
+  margin-right: 25px;
+}
+header .wrap-top-menu ul li.active {}
+header .wrap-top-menu ul li.active a, header .wrap-top-menu ul li a:hover {
+  color: #4DBCE6;
+}
+header .wrap-top-menu ul li a {
+  color: #222;
+  font-size: 20px;
+  text-decoration: none;
+}
+header .wrap-bottom-menu {
+  margin-top: 30px;
+  background: #F2F2F2;
+}
+header .wrap-bottom-menu ul {
+  list-style-type: none;
+}
+header .wrap-bottom-menu ul li {
+  float: left;
+}
+header .wrap-bottom-menu ul li.active {}
+header .wrap-bottom-menu ul li.active a, header .wrap-bottom-menu ul li a:hover {
+  background: #fff;
+}
+header .wrap-bottom-menu ul li a {
+  color: #222;
+  display: block;
+  padding: 20px 15px;
+  text-decoration: none;
+  border-right: 1px solid #E6E6E6;
+}
+header .wrap-bottom-menu ul li:first-child a {
+  border-left: 1px solid #E6E6E6;
+}
+section .header {
+  position: relative;
+  padding: 40px 0;
+}
+section .header h1 {
+  color: #494D4F;
+  font-size: 30px;
+  font-weight: normal;
+}
+section .header label {
+  top: 50%;
+  right: 0;
+  height: 40px;
+  margin-top: -20px;
+  line-height: 40px;
+  position: absolute;
+  padding-left: 40px;
+  box-shadow: 0px 2px 4px 1px rgba(208, 208, 208, 1);
+}
+section .header label i.icon-search {
+  top: 50%;
+  left: 15px;
+  width: 19px;
+  height: 19px;
+  margin-top: -8px;
+  position: absolute;
+  background-position: -22px 0;
+}
+section .header label input, section .header label input:focus {
+  outline: none;
+  border: 0 none;
+  font-size: 16px;
+}
+section.block .container {
+  margin-bottom: 30px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #E6E6E6;
+}
+section.block h2 {
+  color: #222;
+  font-size: 24px;
+  margin-bottom: 30px;
+  font-weight: normal;
+}
+section.block .table {
+  width: 100%;
+}
+section.block .table tr.active {
+  color: #E78B28;
+}
+section.block .table tr td {
+  padding: 5px 15px 5px 0;
+}
+section.block .table tr td div {
+  position: relative;
+  line-height: 20px;
+}
+section.block .table tr td .color-jpg {
+  color: #bcaf84;
+}
+section.block .table tr td .color-xlsx {
+  color: #73B33A;
+}
+section.block .table tr td .color-org {
+  color: #E78B28;
+}
+section.block .table tr td .icon-book {
+  top: 0;
+  left: -23px;
+  width: 13px;
+  height: 17px;
+  margin-right: 10px;
+  position: absolute;
+  background-position: 0 -24px;
+}
+section.block .table tr td .jpg {
+  color: #fff;
+  padding: 3px 5px;
+  font-weight: bold;
+  border-radius: 4px;
+  background: #BCAF84;
+}
+section.block .table tr td .xlsx {
+  color: #fff;
+  padding: 3px 5px;
+  font-weight: bold;
+  border-radius: 4px;
+  background: #73B33A;
+}
+section.block .table tr td:last-child {
+  text-align: right;
+}
+footer {
+  padding-bottom: 40px;
+}
+footer .footer-menu ul {
+  list-style-type: none;
+  padding: 25px 0;
+}
+footer .footer-menu ul li {
+  color: #CDCDCD;
+  float: left;
+  position: relative;
+  margin: 0 40px 0 0;
+}
+footer .footer-menu ul li i.icon-key {
+  top: 2px;
+  width: 20px;
+  height: 16px;
+  position: relative;
+  background-position: -22px -20px;
+}
